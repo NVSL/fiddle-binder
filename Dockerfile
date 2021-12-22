@@ -1,12 +1,17 @@
 FROM jupyter/scipy-notebook:lab-3.2.5
 ### create user with a home directory
-#ARG NB_USER
-#ARG NB_UID
-#ENV USER ${NB_USER}
-#ENV HOME /home/${NB_USER}
+ARG NB_USER
+ARG NB_UID
+ENV USER ${NB_USER}
+ENV HOME /home/${NB_USER}
+USER root
+RUN adduser --disabled-password \
+    --gecos "Default user" \
+    --uid ${NB_UID} \
+    ${NB_USER} || true
 
 #WORKDIR /tmp
-USER root
+
 RUN env
 RUN apt-get update --fix-missing; apt-get update
 RUN apt-get install -y less emacs-nox gcc make g++ gdb build-essential libboost-dev graphviz curl && apt-get clean -y #gcc-8 g++-8 libhdf5-dev uuid-runtime  openssh-client time  default-jdk
@@ -24,8 +29,4 @@ COPY --chown=${NB_USER} *.ipynb ${HOME}
 RUN mkdir -p .jupyter
 COPY --chown=${NB_USER} jupyter_notebook_config.py .jupyter/
 
-#RUN adduser --disabled-password \
-#    --gecos "Default user" \
-#    --uid ${NB_UID} \
-#    ${NB_USER}
 WORKDIR ${HOME}
