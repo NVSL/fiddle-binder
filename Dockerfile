@@ -9,6 +9,7 @@ RUN adduser --disabled-password \
     --gecos "Default user" \
     --uid ${NB_UID} \
     ${NB_USER} || true
+RUN addgroup -g ${NB_UID} ${NB_USER}
 
 #WORKDIR /tmp
 
