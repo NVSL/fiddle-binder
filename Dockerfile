@@ -5,6 +5,12 @@ ARG NB_UID
 ENV USER ${NB_USER}
 ENV HOME /home/${NB_USER}
 USER root
+#USER ${NB_USER}
+#RUN adduser --disabled-password \
+#    --gecos "Default user" \
+#    --uid ${NB_UID} \
+#    ${NB_USER} || true
+
 
 #WORKDIR /tmp
 
@@ -19,12 +25,6 @@ RUN git clone https://github.com/NVSL/fiddle.git && cd fiddle; pip install .
 RUN rm -rf fiddle
 ENV LD_LIBRARY_PATH  /opt/conda/lib/python3.9/site-packages/fiddle/resources/libfiddle
 
-
-USER ${NB_USER}
-RUN adduser --disabled-password \
-    --gecos "Default user" \
-    --uid ${NB_UID} \
-    ${NB_USER} || true
 
 
 COPY  *.ipynb ${HOME}
