@@ -19,16 +19,16 @@ RUN git clone https://github.com/NVSL/fiddle.git && cd fiddle; pip install .
 RUN rm -rf fiddle
 ENV LD_LIBRARY_PATH  /opt/conda/lib/python3.9/site-packages/fiddle/resources/libfiddle
 
-RUN addgroup ${NB_USER}
+
+USER ${NB_USER}
 RUN adduser --disabled-password \
     --gecos "Default user" \
     --uid ${NB_UID} \
     ${NB_USER} || true
-RUN adduser ${NB_USER} ${NB_USER}
 
 
-COPY --chown=${NB_USER} *.ipynb ${HOME}
+COPY  *.ipynb ${HOME}
 RUN mkdir -p .jupyter
-COPY --chown=${NB_USER} jupyter_notebook_config.py .jupyter/
+COPY  jupyter_notebook_config.py .jupyter/
 
 WORKDIR ${HOME}
