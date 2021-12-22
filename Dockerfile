@@ -5,15 +5,9 @@ ARG NB_UID
 ENV USER ${NB_USER}
 ENV HOME /home/${NB_USER}
 USER root
-RUN adduser --disabled-password \
-    --gecos "Default user" \
-    --uid ${NB_UID} \
-    ${NB_USER} || true
-RUN addgroup -g ${NB_UID} ${NB_USER}
 
 #WORKDIR /tmp
 
-RUN env
 RUN apt-get update --fix-missing; apt-get update
 RUN apt-get install -y less emacs-nox gcc make g++ gdb build-essential libboost-dev graphviz curl && apt-get clean -y #gcc-8 g++-8 libhdf5-dev uuid-runtime  openssh-client time  default-jdk
 RUN curl -L https://github.com/radareorg/radare2/releases/download/5.3.1/radare2-dev_5.3.1_amd64.deb -o /tmp/radare2-dev_5.3.1_amd64.deb
@@ -24,6 +18,13 @@ RUN pip install wheel
 RUN git clone https://github.com/NVSL/fiddle.git && cd fiddle; pip install .
 RUN rm -rf fiddle
 ENV LD_LIBRARY_PATH  /opt/conda/lib/python3.9/site-packages/fiddle/resources/libfiddle
+
+RUN addgroup ${NB_USER}
+RUN adduser --disabled-password \
+    --gecos "Default user" \
+    --uid ${NB_UID} \
+    ${NB_USER} || true
+RUN adduser ${NB_USER} ${NB_USER}
 
 
 COPY --chown=${NB_USER} *.ipynb ${HOME}
