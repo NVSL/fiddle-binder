@@ -20,9 +20,9 @@ RUN rm -rf fiddle
 ENV LD_LIBRARY_PATH  /opt/conda/lib/python3.9/site-packages/fiddle/resources/libfiddle
 
 
-COPY --chown=jovyan *.ipynb /home/jovyan/
+COPY --chown=${NB_USER} *.ipynb ${HOME}
 RUN mkdir -p .jupyter
-COPY --chown=jovyan jupyter_notebook_config.py .jupyter/
+COPY --chown=${NB_USER} jupyter_notebook_config.py .jupyter/
 
 #RUN adduser --disabled-password \
 #    --gecos "Default user" \
